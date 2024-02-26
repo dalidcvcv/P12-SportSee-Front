@@ -1,0 +1,43 @@
+.average_session_graph {
+  width:31%;
+  height: 100%;
+  background-color: #FF0000;
+  border-radius: 5px;
+}
+  
+.average_session_graph h2 {
+  position: absolute;
+  margin-left: 1rem;
+  margin-top: 1rem;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 24px;
+  max-width: 147px;
+  color: rgba(255, 255, 255, 0.7);
+  }
+
+.custom-tooltip-objectif {
+  background-color: white;
+  color: black;
+  padding: 0px 10px;
+  font-size: 5px; 
+  height: 40px;
+}
+
+.custom-tooltip-objectif p {
+  font-size: 12px; 
+  font-weight:bold;
+  line-height: 40px;
+  margin: 0;
+}
+
+.objectif .recharts-tooltip-wrapper {
+  transform: translate(0, -10px) !important;
+}
+
+@media screen and (max-width: 1200px) {
+  .average_session_graph h2 {
+    margin-top: 0.8rem;
+    font-size: 13px;
+  }
+}

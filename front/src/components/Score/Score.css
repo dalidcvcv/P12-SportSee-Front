@@ -1,0 +1,55 @@
+.score_graph {
+  width: 31%;
+  height: 100%;
+  background-color: #FBFBFB;
+  border-radius: 5px;
+}
+
+.score_graph h2 {
+  position: absolute;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 24px;
+  margin-left: 1rem;
+  margin-top: 20px;
+  margin-left: 20px;
+
+}
+
+.custom-legend {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
+
+.custom-legend .legend-score {
+  font-size: 23px;
+  font-weight: 600;
+  line-height: 26px;
+  text-align: center;
+  color: #282D30;
+  margin-top: 10px;
+}
+
+.custom-legend p {
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  text-align: center;
+  color: #74798C;
+  margin-top: 0;
+}
+
+@media screen and (max-width: 1200px) {
+  .score_graph h2 {
+    font-size: 14px;
+    margin-top: 10px;
+    margin-left: 15px;
+  }
+
+  .custom-legend .legend-score {
+    font-size: 22px;
+    line-height: 24px;
+  }
+}
