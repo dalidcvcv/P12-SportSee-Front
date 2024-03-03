@@ -4,31 +4,39 @@ import './Poids.css'
 import { fetchUserActivity } from '../../Api/Api.js'; 
 
 function Barchart({ userId }) {
+  // Initialisation du state pour stocker les données 'activité'.
   const [activityData, setActivityData] = useState([]);
 
+  // Lance la fonction de récupération des données à chaque changement de userId.
   useEffect(() => {
     async function getActivityData() {
       try {
+        // Appel asynchrone à l'API pour récupérer les données d'activité de l'userId
         const userDataResponse = await fetchUserActivity(userId);
+        // Gestion de la réponse de l'API pour extraire les données.
         const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
 
+        // Màj du state 'activityData' si 'userData.sessions' est disponible.
         if (userData && userData.sessions) {
           const formattedData = userData.sessions.map(session => ({
             ...session,
-            day: session.day,
-            kilogram: session.kilogram,
-            calories: session.calories
+            day: session.day, // Jour de la session.
+            kilogram: session.kilogram, // Poids enregistré ce jour-là.
+            calories: session.calories // Calories brûlées ce jour-là.
           }));
           setActivityData(formattedData);
         }
       } catch (error) {
+        // Gestion des erreurs lors de la récupération des données.
         console.error('Erreur lors de la récupération des données poids', error);
       }
     }
   
+    // Appel de la fonction de récupération des données.
     getActivityData();
-  }, [userId]); // Dépendance à userId pour recharger les données si userId change
+  }, [userId]); 
   
+  // Retourne un message d'indisponibilité si pas de donnée activité.
   if (activityData.length === 0) {
     return <div>Aucune donnée disponible.</div>;
   }
