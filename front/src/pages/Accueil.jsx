@@ -26,17 +26,10 @@ function Accueil () {
   // Récupération des données Main de l'utilisateur à partir de l'Api.
   useEffect(() => {
     fetchUserMainData(userId)
-      .then(userData => {
-        // Traitement de la réponse pour extraire le prénom de l'utilisateur et mise à jour de l'état.
-        if (userData && userData.data && userData.data.userInfos) {
-          // En mode réel, extrait le prénom depuis userData.data.userInfos.
-          setUserFirstName(userData.data.userInfos.firstName);
-        } else if (userData && userData.userInfos) {
-          // En mode mocké, extrait directement le prénom depuis userData.userInfos.
-          setUserFirstName(userData.userInfos.firstName);
-        }
+      .then(data => {
+        setUserFirstName(data.userFirstName);// Màj de l'état avec le prénom de l'utilisateur
       });
-  }, [userId]); //à chaque changement d'userId.
+  }, [userId]);//à chaque changement d'userId.
   
   // Génération du DOM pour la page.
   return (

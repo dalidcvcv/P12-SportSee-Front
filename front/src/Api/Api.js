@@ -46,19 +46,107 @@ export async function getUserData(userId, dataSource) {
   }    
 }
 
+
+function formatMainUserData(userData) {
+  if (userData && userData.keyData) {
+    return {
+      ...userData,
+      keyData: {
+        ...userData.keyData,
+        calorieCount: (userData.keyData.calorieCount / 1000).toFixed(3),// Convertit les calories en kcal avec 3 décimales
+      },
+    };
+  }
+  return userData; 
+}
+
+
+function extractUserFirstName(userData) {// Fonction de formatage pour extraire le prénom de l'utilisateur
+  if (userData && userData.data && userData.data.userInfos) {
+    return userData.data.userInfos.firstName;// En mode réel, extrait le prénom depuis userData.data.userInfos
+  } else if (userData && userData.userInfos) {// En mode mocké, extrait le prénom depuis userData.userInfos
+    return userData.userInfos.firstName;
+  }
+  return ''; 
+}
+
+function formatAverageSessionsData(userData) {
+  if (userData && userData.sessions) {
+    return userData.sessions.map(session => ({
+      ...session,
+      sessionLength: session.sessionLength 
+    }));
+  }
+  return []; 
+}
+
+
+function formatPerformanceData(performanceData) {// Fonction de formatage des données de performance
+  const kindMapping = {// Mapping des catégories de performance.
+    1: 'Cardio',
+    2: 'Energie',
+    3: 'Endurance',
+    4: 'Force',
+    5: 'Vitesse',
+    6: 'Intensité'
+  };
+  if (performanceData && performanceData.data) {
+    return performanceData.data.map(item => ({
+      subject: kindMapping[item.kind], // Conversion des catégories
+      value: item.value, // Valeur de performance
+      fullMark: 150 // Valeur maximale pour chaque catégorie
+    })).reverse(); // Inversion de l'ordre pour correspondre à la maquette
+  }
+  return []; 
+}
+
+
+function formatActivityData(activityData) {// Fonction de formatage des données d'activité
+  if (activityData && activityData.sessions) {
+    return activityData.sessions.map(session => ({
+      ...session,
+      day: session.day, // Jour de la session
+      kilogram: session.kilogram, // Poids enregistré ce jour-là
+      calories: session.calories // Calories brûlées ce jour-là
+    }));
+  }
+  return []; 
+}
+
+
+function formatUserScore(userData) {// Fonction de formatage pour le score de l'utilisateur
+  const scoreValue = userData.todayScore || userData.score;
+  return scoreValue ? { name: 'Score', todayScore: scoreValue * 100 } : {};
+}
+
 // Fonctions spécifiques pour simplifier les demandes de chaque type de données utilisateur.
+
 export const fetchUserMainData = async (userId) => {
-  return getUserData(userId, USER_MAIN_DATA);
+  const userDataResponse = await getUserData(userId, USER_MAIN_DATA);
+  const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
+
+  const userFirstName = extractUserFirstName(userData); 
+  const formattedMainData = formatMainUserData(userData); 
+  const userScore = formatUserScore(userData); 
+  return { ...formattedMainData, userScore, userFirstName };
 };
+
 
 export const fetchUserActivity = async (userId) => {
-  return getUserData(userId, USER_ACTIVITY);
+  const userDataResponse = await getUserData(userId, USER_ACTIVITY);
+  const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
+  return formatActivityData(userData);
 };
 
+
 export const fetchUserAverageSessions = async (userId) => {
-  return getUserData(userId, USER_AVERAGE_SESSIONS);
+  const userDataResponse = await getUserData(userId, USER_AVERAGE_SESSIONS);
+  const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
+  return formatAverageSessionsData(userData);
 };
 
 export const fetchUserPerformance = async (userId) => {
-  return getUserData(userId, USER_PERFORMANCE);
+  const userDataResponse = await getUserData(userId, USER_PERFORMANCE);
+  const userData = mocked ? userDataResponse : userDataResponse.data || userDataResponse;
+  return formatPerformanceData(userData);
 };

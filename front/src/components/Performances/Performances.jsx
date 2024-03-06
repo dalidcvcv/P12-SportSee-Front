@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, ResponsiveContainer } from 'recharts';
-import { fetchUserPerformance, mocked } from '../../Api/Api';
+import { fetchUserPerformance } from '../../Api/Api';
 import './Performances.css';
 
 function UserRadarChart({ userId }) {
@@ -8,39 +8,12 @@ function UserRadarChart({ userId }) {
   const [performanceData, setPerformanceData] = useState([]);
 
   useEffect(() => {
-    // Mapping des catégories de performance.
-    const kindMapping = {
-      1: 'Cardio',
-      2: 'Energie',
-      3: 'Endurance',
-      4: 'Force',
-      5: 'Vitesse',
-      6: 'Intensité'
-    };
-  
-    // Traitement et formatage les données.
-    const processPerformanceData = (data) => {
-      return data.map(item => ({
-        subject: kindMapping[item.kind], // Conversion des catégories.
-        value: item.value, // Valeur de performance.
-        fullMark: 150 // Valeur maximale pour chaque catégorie.
-      })).reverse(); // Inversion de l'ordre pour correspondre à la maquette.
-    };
-  
-    // Récupération des données de performance depuis l'API.
-    const fetchPerformanceData = async () => {
+    
+    const fetchPerformanceData = async () => {// Récupération et màj des données de performance formatées
       try {
-        const userDataResponse = await fetchUserPerformance(userId);
-        // Gestion du mode mocké pour la récupération des données.
-        const userData = mocked ? userDataResponse : userDataResponse.data || userDataResponse;
-  
-        // Màj du state 'performanceData' avec les données de 'userData.data
-        if (userData && userData.data) {
-          const formattedData = processPerformanceData(userData.data);
-          setPerformanceData(formattedData);
-        } 
+        const formattedData = await fetchUserPerformance(userId);
+        setPerformanceData(formattedData);
       } catch (error) {
-        // Gestion des erreurs lors de la récupération des données.
         console.error('Erreur lors de la récupération des données performances:', error);
       }
     };

@@ -12,24 +12,11 @@ function AverageSessionsChart ({ userId }) {
 
   // Utilisation de useEffect pour récupérer les données des sessions dès que userId change.
   useEffect(() => {
-    // Fonction asynchrone pour récupérer les données.
     async function getAverageSessionsData() {
       try {
-        // Appel de l'API pour récupérer les données.
-        const userDataResponse = await fetchUserAverageSessions(userId);
-        // // Gestion de la réponse pour extraire les données.
-        const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
-  
-        // Màj du state 'averageSessions' si 'userData.sessions' est disponible.
-        if (userData && userData.sessions) {
-          const formattedData = userData.sessions.map(session => ({
-            ...session,
-            sessionLength: session.sessionLength // Copie de chaque session avec sa durée.
-          }));
-          setAverageSessions(formattedData);
-        } 
+        const formattedData = await fetchUserAverageSessions(userId);
+        setAverageSessions(formattedData);
       } catch (error) {
-        // Gestion des erreurs lors de la récupération des données.
         console.error('Erreur lors de la récupération des données de sessions moyennes:', error);
       }
     }

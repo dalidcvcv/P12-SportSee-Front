@@ -13,21 +13,14 @@ const Nutrition = ({ userId }) => {
 
   // Utilisation de useEffect pour récupérer les données nutritionnelles de l'utilisateur.
   useEffect(() => {
-    // Fonction asynchrone pour faire l'appel API.
     async function fetchUserData() {
-      const userDataResponse = await fetchUserMainData(userId);
-      const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
-      
-      // Màj du state 'keyData' si 'userData.keyData' est disponible.
-      if (userData && userData.keyData) {
-        setKeyData({
-          ...userData.keyData,
-          // Convertit les calories en kilocalories et arrondit à trois décimales.
-          calorieCount: (userData.keyData.calorieCount / 1000).toFixed(3)
-        });
-      } else {
-        // Si aucune donnée n'est trouvée, affiche une erreur dans la console.
-        console.error("Pas de données nutrition", userId);
+      try {
+        const userData = await fetchUserMainData(userId);
+        if (userData && userData.keyData) {
+          setKeyData(userData.keyData); // Màj du state 'keyData' 
+        } 
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données utilisateur", error);
       }
     }
   

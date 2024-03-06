@@ -7,27 +7,12 @@ function Barchart({ userId }) {
   // Initialisation du state pour stocker les données 'activité'.
   const [activityData, setActivityData] = useState([]);
 
-  // Lance la fonction de récupération des données à chaque changement de userId.
   useEffect(() => {
     async function getActivityData() {
       try {
-        // Appel asynchrone à l'API pour récupérer les données d'activité de l'userId
-        const userDataResponse = await fetchUserActivity(userId);
-        // Gestion de la réponse de l'API pour extraire les données.
-        const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
-
-        // Màj du state 'activityData' si 'userData.sessions' est disponible.
-        if (userData && userData.sessions) {
-          const formattedData = userData.sessions.map(session => ({
-            ...session,
-            day: session.day, // Jour de la session.
-            kilogram: session.kilogram, // Poids enregistré ce jour-là.
-            calories: session.calories // Calories brûlées ce jour-là.
-          }));
-          setActivityData(formattedData);
-        }
+        const formattedData = await fetchUserActivity(userId);// Récupération et màj des données 'activité'
+        setActivityData(formattedData);
       } catch (error) {
-        // Gestion des erreurs lors de la récupération des données.
         console.error('Erreur lors de la récupération des données poids', error);
       }
     }

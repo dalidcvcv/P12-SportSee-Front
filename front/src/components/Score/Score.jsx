@@ -11,23 +11,16 @@ function ScoreChart({ userId }) {
   useEffect(() => {
     async function getUserScore() {
       try {
-        // Appel asynchrone à l'API pour récupérer les données 'main'.
-        const userDataResponse = await fetchUserMainData(userId);
-        const userData = userDataResponse.data ? userDataResponse.data : userDataResponse;
+        const { userScore } = await fetchUserMainData(userId);
         
-        // Extraction du score de l'utilisateur à partir de la réponse de l'API.
-        const scoreValue = userData.todayScore || userData.score;
-  
-        // Màj du state avec le score de l'utilisateur s'il est disponible.
-        if (scoreValue) {
-          setUserScore([{ name: 'Score', todayScore: scoreValue * 100 }]);
-        } 
+        if (userScore) {// Màj du state avec le score de l'utilisateur s'il est disponible
+          setUserScore([userScore]);
+        }
       } catch (error) {
-        // Gestion des erreurs lors de la récupération du score.
         console.error('Erreur lors de la récupération du score :', error);
       }
     }
-  
+
     // Appel de la fonction de récupération du score.
     getUserScore();
   }, [userId]);
