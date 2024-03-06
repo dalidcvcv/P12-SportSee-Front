@@ -5,11 +5,18 @@ import { USER_MAIN_DATA, USER_ACTIVITY, USER_AVERAGE_SESSIONS, USER_PERFORMANCE 
 const [, search] = window.location.href.split('?');
 export const mocked = search === 'mocked';
 
+export function isUserIdInMockData(userId, dataSource) {
+  return dataSource.some(data => data.userId.toString() === userId.toString() || data.id.toString() === userId.toString());
+}
+
 // Récupération des données utilisateur selon 'userId' et 'dataSource'.
 export async function getUserData(userId, dataSource) { 
   // En mode mocké, retourne les données simulées correspondant au 'userId'.
   if (mocked) {
     const data = dataSource.find(user => user.userId === userId || user.id === userId);
+    if (!data) {
+      return { notFound: true };
+    }
     return data;
   } else {
     // Construction de l'URL API basée sur 'userId' et le type de données demandé.
