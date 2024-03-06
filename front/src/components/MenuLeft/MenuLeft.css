@@ -20,6 +20,9 @@
 .categories a {
     margin-bottom: 90px;
     max-width: 40px;
+    background-color: #FFF;
+    padding: 10px;
+    border-radius: 5px;
 }
 
 .categories img:last-child {
